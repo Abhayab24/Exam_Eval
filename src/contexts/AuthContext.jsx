@@ -5,7 +5,7 @@ import axios from 'axios';
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
-// ✅ Fallback API URL if env not loaded
+// Backend API
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api/v1";
 
 export const AuthProvider = ({ children }) => {
@@ -13,67 +13,63 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("🔗 Using API URL:", API_URL); // 👈 Debug
+    console.log("🔗 Using API URL:", API_URL);
     const user = localStorage.getItem("examEvalUser");
     if (user && user !== "undefined") {
       try {
         setCurrentUser(JSON.parse(user));
-      } catch (err) {
-        console.error("Error parsing user from localStorage:", err);
+      } catch {
         localStorage.removeItem("examEvalUser");
       }
     }
     setLoading(false);
   }, []);
 
-  // Register user
+  // -------------------- REGISTER --------------------
   const register = async (name, email, password, role) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, {
-        name,
-        email,
-        password,
-        role,
+      const res = await axios.post(`${API_URL}/auth/register`, {
+        name, email, password, role
       });
-      const { data, token } = response.data;
-      setCurrentUser(data);
-      localStorage.setItem("examEvalUser", JSON.stringify(data));
-      localStorage.setItem("examEvalToken", token);
-      return true;
+
+      const user = res.data.data;
+      localStorage.setItem("examEvalUser", JSON.stringify(user));
+      localStorage.setItem("examEvalToken", res.data.token);
+      setCurrentUser(user);
+
+      return user;
     } catch (error) {
-      console.error("❌ Registration failed:", error.response?.data || error.message);
       alert(error.response?.data?.error || "Registration failed");
-      return false;
+      return null;
     }
   };
 
-  // Login user
-  const login = async (email, password, role) => {
+  // -------------------- LOGIN (FIXED) --------------------
+  const login = async (email, password) => {
     try {
-      const { data } = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-        role,
-      });
-      setCurrentUser(data.user);
-      localStorage.setItem("examEvalUser", JSON.stringify(data.user));
-      localStorage.setItem("examEvalToken", data.token);
-      return data.user;
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+
+      const user = res.data.data;  // <-- Correct (backend returns { data: user })
+      localStorage.setItem("examEvalUser", JSON.stringify(user));
+      localStorage.setItem("examEvalToken", res.data.token);
+      setCurrentUser(user);
+
+      return user; // returns user object → navigation works
     } catch (error) {
-      console.error("❌ Login failed:", error.response?.data || error.message);
       alert(error.response?.data?.error || "Login failed");
       throw error;
     }
   };
 
+  // -------------------- LOGOUT --------------------
   const logout = () => {
-    setCurrentUser(null);
     localStorage.removeItem("examEvalUser");
     localStorage.removeItem("examEvalToken");
+    setCurrentUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout }}>
+    <AuthContext.Provider value={{ currentUser, register, login, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
