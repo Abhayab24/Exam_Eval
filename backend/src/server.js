@@ -22,6 +22,8 @@ import uploadRoutes from './routes/uploads.js';
 import analyticsRoutes from './routes/analytics.js';
 app.set("trust proxy", 1);
 
+
+
 // Load environment variables
 dotenv.config();
 
@@ -31,6 +33,7 @@ const __dirname = path.dirname(__filename);
 
 // Create Express app
 const app = express();
+app.set("trust proxy", 1);
 
 // Connect to database
 connectDB();
