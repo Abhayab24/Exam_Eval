@@ -20,6 +20,7 @@ import examRoutes from './routes/exams.js';
 import evaluationRoutes from './routes/evaluations.js';
 import uploadRoutes from './routes/uploads.js';
 import analyticsRoutes from './routes/analytics.js';
+app.set("trust proxy", 1);
 
 // Load environment variables
 dotenv.config();
