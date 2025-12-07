@@ -256,7 +256,7 @@ const Upload = () => {
     if (grade === 'B+' || grade === 'B') return 'text-blue-500';
     if (grade === 'C+' || grade === 'C') return 'text-yellow-500';
     if (grade === 'D+' || grade === 'D') return 'text-orange-500';
-    return 'text-red-500'; // F grade
+    return 'text-red-500'; 
   };
 
   return (
