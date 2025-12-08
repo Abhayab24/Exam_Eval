@@ -23,7 +23,7 @@ This **frontend** is built using **React, React Router, Tailwind CSS, and Heroic
 1️⃣ **Clone the repository:**
 
 ```bash
-git clone https://github.com/Sky07light/ExamEval.git
+git clone https://github.com/Abhayab24/ExamEval.git
 cd ExamEval
 ```
 

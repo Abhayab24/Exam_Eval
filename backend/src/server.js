@@ -20,8 +20,6 @@ import examRoutes from './routes/exams.js';
 import evaluationRoutes from './routes/evaluations.js';
 import uploadRoutes from './routes/uploads.js';
 import analyticsRoutes from './routes/analytics.js';
-app.set("trust proxy", 1);
-
 // Load environment variables
 dotenv.config();
 
@@ -31,6 +29,7 @@ const __dirname = path.dirname(__filename);
 
 // Create Express app
 const app = express();
+app.set("trust proxy", 1);
 
 // Connect to database
 connectDB();
@@ -50,7 +49,10 @@ app.use('/api/', limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    process.env.FRONTEND_URL, 
+    "https://examevalbyabhay.netlify.app"
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
