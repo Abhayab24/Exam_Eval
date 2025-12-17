@@ -38,4 +38,4 @@ npm install tailwindcss @tailwindcss/vite
 ```bash
 npm run dev
 ```
-The app will run at http://localhost:5173.
+The app will run at https://examevalbyabhay.netlify.app/
